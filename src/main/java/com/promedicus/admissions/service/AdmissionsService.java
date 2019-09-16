@@ -31,4 +31,15 @@ public interface AdmissionsService {
      * @throws AdmissionException
      */
     public AdmissionDTO deleteAdmission(long id) throws AdmissionException;
+
+    /**
+     * Update the admission entity identified by given param
+     * 
+     * @param id
+     * @param modifiedAdmission
+     * @return
+     * @throws AdmissionException
+     */
+    public AdmissionDTO updateAdmission(long id, AdmissionDTO modifiedAdmission)
+            throws AdmissionException;
 }

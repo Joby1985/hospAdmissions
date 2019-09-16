@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -51,6 +52,17 @@ public class AdmissionsController {
                 new OperationResponse(
                         HttpStatus.OK.value(), "Created admission",
                         admServ.createAdmission(admissionDTO)));
+    }
+
+    @PutMapping("/admissions/{ID}")
+    public ResponseEntity<OperationResponse> updateAdmission(@PathVariable("ID") long id,
+                                                             @RequestBody AdmissionDTO admssion)
+            throws Exception {
+        log.debug("In updateAdmission, input : " + id);
+        AdmissionDTO updatedAdmission = admServ.updateAdmission(id, admssion);
+        return ResponseEntity.ok(
+                new OperationResponse(
+                        HttpStatus.OK.value(), "Admission updated", updatedAdmission));
     }
 
     @DeleteMapping("/admissions/{ID}")

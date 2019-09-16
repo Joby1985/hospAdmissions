@@ -62,7 +62,7 @@ public class AdmissionsServiceImpl implements AdmissionsService {
         admissionDTO.setModifiedDate(Calendar.getInstance().getTime());
         Admission admission = mapper.toAdmission(admissionDTO);
         // Fetch back saved entity
-        setPatientInfoToSaveAdmission(admission);
+        setPatientInfoToSaveAdmission(true, admission);
         return saveAdmission(admission);
     }
 
@@ -75,8 +75,25 @@ public class AdmissionsServiceImpl implements AdmissionsService {
         }
         Admission admToDelete = admission.get();
         admToDelete.setDod(Calendar.getInstance().getTime());
-        admRepository.save(admToDelete);
-        return mapper.toAdmissionDTO(admToDelete);
+        return saveAdmission(admToDelete);
+    }
+
+    @Override
+    @Transactional
+    public AdmissionDTO updateAdmission(long id, AdmissionDTO modifiedAdmission)
+            throws AdmissionException {
+        Optional<Admission> admission = admRepository.findById(id);
+        if (!admission.isPresent()) {
+            throw new AdmissionException(
+                    "Could not fetch the provided Admission entity for update. Please try again.");
+        }
+        Admission toUpdate = mapper.toAdmission(modifiedAdmission);
+        Admission existingAdmission = admission.get();
+        toUpdate.setId(existingAdmission.getId());
+
+        // Fetch back saved entity
+        setPatientInfoToSaveAdmission(false, toUpdate);
+        return saveAdmission(toUpdate);
     }
 
     /**
@@ -98,6 +115,7 @@ public class AdmissionsServiceImpl implements AdmissionsService {
             throw new AdmissionException(
                     "Could not create the admission. Invalid Category Code provided.");
         }
+        admission.setModifiedDate(Calendar.getInstance().getTime());
         Admission admissionSaved = admRepository.save(admission);
         if (admissionSaved == null) {
             throw new AdmissionException("Could not create the admission. Please retry.");
@@ -109,9 +127,11 @@ public class AdmissionsServiceImpl implements AdmissionsService {
      * Fetch and set patient info in case of existing/registered patient, else register/save patient
      * before creating admission for the same
      * 
+     * @param boolean
      * @param admission
      */
-    private void setPatientInfoToSaveAdmission(Admission admission) throws RegistrationException {
+    private void setPatientInfoToSaveAdmission(boolean bCreateAdmission, Admission admission)
+            throws RegistrationException {
         Patient patient = admission.getPatient();
         Patient validatedPatient = regServ.validatePatient(patient);
 
@@ -131,9 +151,15 @@ public class AdmissionsServiceImpl implements AdmissionsService {
             admission.setPatient(existingPatient);
         }
         else {
-            patient = patRepository.save(validatedPatient);
-            admission.setPatient(patient);
-            logger.info("Creating patient");
+            if (bCreateAdmission) {
+                patient = patRepository.save(validatedPatient);
+                admission.setPatient(patient);
+                logger.info("Creating patient");
+            }
+            else {
+                throw new RegistrationException(
+                        "Cannot change patient detaisl for an existing admission. Only admission parameters may be modified");
+            }
         }
     }
 }
