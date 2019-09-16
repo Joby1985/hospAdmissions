@@ -1,4 +1,16 @@
 # hospAdmissions
+
+A) Setup and Run
+
+1. Git clone the repository into your loal file system.
+2. From command prompt, run the below command
+     $ mvn clean verify
+3. To start the application:
+     $ mvn spring-boot:run
+
+
+
+
 Hospital Admissions REST services
 
 Following are the rest services for performing admission related operations:
