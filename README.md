@@ -1,5 +1,11 @@
 # hospAdmissions
 
+
+This is a springboot based application that uses CRUD repository and hibernate, and in the backend MySQL Server. Please ensure that you have setup Java8 in the system, and has installed maven, and the required paths and JVM_HOME and MAVEN_HOME are set.
+
+A) Initialize MySQL DB
+ 1. Import the scripts in the root of the folder in the order they are given, the first one to be executed being 0_prom_hosp_admission_DB_Init.sql
+
 A) Setup and Run
 
 1. Git clone the repository into your loal file system.
