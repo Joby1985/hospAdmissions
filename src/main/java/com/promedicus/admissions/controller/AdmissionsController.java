@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,14 +39,19 @@ public class AdmissionsController {
         return "Welcome to Promedicus Hospital admissions System!";
     }
 
-    @GetMapping("/admissions")
-    public ResponseEntity<List<AdmissionDTO>> fetchAllAdmissions() {
+    //To allow CORS access to the 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping(
+            path = "/admissions",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<AdmissionDTO> fetchAllAdmissions() {
         List<AdmissionDTO> admissions = admServ.fetchAll();
-        log.debug("Listing all admissions");
-        return ResponseEntity.ok(admissions);
+        log.info("Listing all admissions");
+        return admissions;
     }
 
     @PostMapping("/admissions")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<OperationResponse> createAdmission(@RequestBody AdmissionDTO admissionDTO)
             throws Exception {
         log.debug("In createAdmission, input : " + admissionDTO.toString());
@@ -55,6 +62,7 @@ public class AdmissionsController {
     }
 
     @PutMapping("/admissions/{ID}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<OperationResponse> updateAdmission(@PathVariable("ID") long id,
                                                              @RequestBody AdmissionDTO admssion)
             throws Exception {
@@ -66,6 +74,7 @@ public class AdmissionsController {
     }
 
     @DeleteMapping("/admissions/{ID}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<OperationResponse> deleteAdmission(@PathVariable("ID") long id)
             throws Exception {
         log.debug("In deleteAdmission, input : " + id);
