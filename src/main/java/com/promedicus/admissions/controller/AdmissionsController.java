@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.promedicus.admissions.dto.AdmissionDTO;
+import com.promedicus.admissions.dto.CategoryDTO;
+import com.promedicus.admissions.dto.SexDTO;
 import com.promedicus.admissions.service.AdmissionsServiceImpl;
+import com.promedicus.admissions.service.RegistrationService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,13 +37,16 @@ public class AdmissionsController {
     @Autowired
     private AdmissionsServiceImpl admServ;
 
+    @Autowired
+    private RegistrationService regServ;
+
     @GetMapping("/")
     String home() {
         return "Welcome to Promedicus Hospital admissions System!";
     }
 
     //To allow CORS access to the 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin
     @GetMapping(
             path = "/admissions",
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -51,7 +57,7 @@ public class AdmissionsController {
     }
 
     @PostMapping("/admissions")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin
     public ResponseEntity<OperationResponse> createAdmission(@RequestBody AdmissionDTO admissionDTO)
             throws Exception {
         log.debug("In createAdmission, input : " + admissionDTO.toString());
@@ -62,7 +68,7 @@ public class AdmissionsController {
     }
 
     @PutMapping("/admissions/{ID}")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin
     public ResponseEntity<OperationResponse> updateAdmission(@PathVariable("ID") long id,
                                                              @RequestBody AdmissionDTO admssion)
             throws Exception {
@@ -74,7 +80,7 @@ public class AdmissionsController {
     }
 
     @DeleteMapping("/admissions/{ID}")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin
     public ResponseEntity<OperationResponse> deleteAdmission(@PathVariable("ID") long id)
             throws Exception {
         log.debug("In deleteAdmission, input : " + id);
@@ -83,5 +89,21 @@ public class AdmissionsController {
                 new OperationResponse(
                         HttpStatus.OK.value(), "Admission closed",
                         admServ.createAdmission(closedAdmission)));
+    }
+
+    @CrossOrigin
+    @GetMapping(path = "/getSexes", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<SexDTO> fetchAllSexDetails() throws Exception {
+        List<SexDTO> sexes = regServ.fetchAllValidSex();
+        log.info("Listing all Sex");
+        return sexes;
+    }
+
+    @CrossOrigin
+    @GetMapping(path = "/getCategories", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CategoryDTO> fetchAllCategories() throws Exception {
+        List<CategoryDTO> categories = regServ.fetchAllValidCategories();
+        log.info("Listing all Categories");
+        return categories;
     }
 }

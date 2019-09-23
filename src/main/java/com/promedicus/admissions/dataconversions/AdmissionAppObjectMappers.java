@@ -7,9 +7,13 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 import com.promedicus.admissions.dto.AdmissionDTO;
+import com.promedicus.admissions.dto.CategoryDTO;
 import com.promedicus.admissions.dto.PatientDTO;
+import com.promedicus.admissions.dto.SexDTO;
 import com.promedicus.admissions.model.Admission;
+import com.promedicus.admissions.model.Category;
 import com.promedicus.admissions.model.Patient;
+import com.promedicus.admissions.model.Sex;
 
 /**
  * Mapper used to transform between entity and DTO objects
@@ -32,7 +36,21 @@ public interface AdmissionAppObjectMappers {
 
     PatientDTO toPatientDTO(Patient patient);
 
+    Patient toPatient(PatientDTO patientDTO);
+
     List<PatientDTO> toPatientDTOs(List<Patient> patients);
 
-    Patient toPatient(PatientDTO patientDTO);
+    SexDTO toSexDTO(Sex sex);
+
+    Sex toSex(SexDTO sexdto);
+
+    List<SexDTO> toSexDTOs(List<Sex> sexes);
+
+    CategoryDTO toCategoryDTO(Category cat);
+
+    Category toSex(CategoryDTO catdto);
+
+    List<CategoryDTO> toCategoryDTOs(List<Category> categories);
+
+
 }

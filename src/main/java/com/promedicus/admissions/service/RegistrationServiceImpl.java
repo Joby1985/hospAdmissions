@@ -10,11 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.promedicus.admissions.dataconversions.AdmissionAppObjectMappers;
+import com.promedicus.admissions.dto.CategoryDTO;
 import com.promedicus.admissions.dto.PatientDTO;
+import com.promedicus.admissions.dto.SexDTO;
 import com.promedicus.admissions.exceptions.RegistrationException;
+import com.promedicus.admissions.model.Category;
 import com.promedicus.admissions.model.Patient;
 import com.promedicus.admissions.model.Sex;
+import com.promedicus.admissions.repository.CategoryRepository;
 import com.promedicus.admissions.repository.PatientRepository;
+import com.promedicus.admissions.repository.SexRepository;
 
 /**
  * Service class to interact with repository.
@@ -26,6 +31,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Autowired
     private PatientRepository patRepository;
+
+    @Autowired
+    private SexRepository sexRepository;
+
+    @Autowired
+    private CategoryRepository catRepository;
 
     @Autowired
     private AdmissionAppObjectMappers mapper;
@@ -61,5 +72,21 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         patient.getSex().setCode(fetchedSexInfo.get(0).getCode());
         return patient;
+    }
+
+    @Override
+    public List<SexDTO> fetchAllValidSex() throws RegistrationException {
+        Iterable<Sex> sexes = sexRepository.findAll();
+        List<Sex> sexList = new ArrayList<>();
+        sexes.forEach(sexList::add);
+        return mapper.toSexDTOs(sexList);
+    }
+
+    @Override
+    public List<CategoryDTO> fetchAllValidCategories() throws RegistrationException {
+        Iterable<Category> categories = catRepository.findAll();
+        List<Category> catList = new ArrayList<>();
+        categories.forEach(catList::add);
+        return mapper.toCategoryDTOs(catList);
     }
 }
