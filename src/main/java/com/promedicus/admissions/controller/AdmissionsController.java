@@ -51,7 +51,7 @@ public class AdmissionsController {
             path = "/admissions",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<AdmissionDTO> fetchAllAdmissions() {
-        List<AdmissionDTO> admissions = admServ.fetchAll();
+        List<AdmissionDTO> admissions = admServ.findActiveAdmissions();
         log.info("Listing all admissions");
         return admissions;
     }

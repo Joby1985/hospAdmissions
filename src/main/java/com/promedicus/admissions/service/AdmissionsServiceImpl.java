@@ -162,4 +162,12 @@ public class AdmissionsServiceImpl implements AdmissionsService {
             }
         }
     }
+
+	@Override
+	public List<AdmissionDTO> findActiveAdmissions() {
+		List<Admission> adms = admRepository.findByDodIsNull();
+		List<Admission> admissions = new ArrayList<>();
+        adms.forEach(admissions::add);
+        return mapper.toAdmissionDTOs(admissions);
+	}
 }

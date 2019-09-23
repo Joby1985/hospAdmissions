@@ -33,4 +33,6 @@ public interface AdmissionsRepository extends CrudRepository<Admission, Long> {
 
     @Override
     public void delete(Admission id);
+    
+    public List<Admission> findByDodIsNull();
 }

@@ -42,4 +42,10 @@ public interface AdmissionsService {
      */
     public AdmissionDTO updateAdmission(long id, AdmissionDTO modifiedAdmission)
             throws AdmissionException;
+    
+    /**
+     * Find all active admissions.
+     * @return
+     */
+    public List<AdmissionDTO> findActiveAdmissions();
 }
